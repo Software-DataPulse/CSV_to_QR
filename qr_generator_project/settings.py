@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-th*q^b@ur@3$h8^bui7bp=&18wd_uj@nt4fu2oez23%_vn(d=c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.102.0.224']
+ALLOWED_HOSTS = ['csv-to-qr.herokuapp.com', '127.0.0.1']
 
 # settings.py
 LOGIN_URL = '/accounts/login/'  # Redirects to the login page when @login_required fails
