@@ -84,8 +84,14 @@ WSGI_APPLICATION = 'qr_generator_project.wsgi.application'
 import dj_database_url
 
 DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+    'default': dj_database_url.config(conn_max_age=600)
 }
+
+'''import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+}'''
 
 
 '''DATABASES = {
