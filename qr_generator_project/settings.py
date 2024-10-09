@@ -82,10 +82,19 @@ WSGI_APPLICATION = 'qr_generator_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 import dj_database_url
+import os
 
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600)
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # This is for local development
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+'''# Use PostgreSQL in production
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)'''
+
 
 '''import dj_database_url
 
