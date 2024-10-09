@@ -84,8 +84,14 @@ WSGI_APPLICATION = 'qr_generator_project.wsgi.application'
 import dj_database_url
 
 DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+    'default': dj_database_url.config(conn_max_age=600)
 }
+
+'''import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+}'''
 
 
 '''DATABASES = {
@@ -128,6 +134,15 @@ USE_TZ = True
 
 
 import os
+
+# Configure static file serving in production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+# Activate Django-Heroku.
+import django_heroku
+django_heroku.settings(locals())
+
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
