@@ -115,9 +115,8 @@ def upload_csv(request):
                 qr_code.save()
 
                 # Generate a URL pointing to the display page for this QR code
-                qr_code_url = f"http://10.102.0.224:8000/display_qr_data/{qr_code.id}/"
-
-
+                # In your views.py where you generate the QR code
+                qr_code_url = f"http://csv-to-qr-b0ff20e52441.herokuapp.com/display_qr_data/{qr_code.id}/"
                 # Generate the QR code with the URL
                 qr = qrcode.QRCode(
                     version=1,
@@ -203,7 +202,7 @@ import zipfile
 # views.py
 from django.contrib.auth.decorators import login_required
 
-@login_required
+
 def view_qr_codes(request):
     """
     View to display all the generated QR codes for the logged-in user.
