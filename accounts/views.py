@@ -116,7 +116,7 @@ def upload_csv(request):
 
                 # Generate a URL pointing to the display page for this QR code
                 # In your views.py where you generate the QR code
-                qr_code_url = f"https://www.csvtoqrcode.com{qr_code.id}/"
+                qr_code_url = f"https://www.csvtoqrcode.com/display_qr_data/{qr_code.id}/"
                 # Generate the QR code with the URL
                 qr = qrcode.QRCode(
                     version=1,
