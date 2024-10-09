@@ -1,1 +1,1 @@
-web: gunicorn csv-to-qr.wsgi --log-file -
+web: gunicorn qr_generator_project.wsgi --log-file -

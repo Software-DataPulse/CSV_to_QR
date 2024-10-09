@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-th*q^b@ur@3$h8^bui7bp=&18wd_uj@nt4fu2oez23%_vn(d=c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['csv-to-qr.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['your-app-name.herokuapp.com', 'localhost', '127.0.0.1']
 
 # settings.py
 LOGIN_URL = '/accounts/login/'  # Redirects to the login page when @login_required fails
@@ -153,9 +153,7 @@ import django_heroku
 django_heroku.settings(locals())
 
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
