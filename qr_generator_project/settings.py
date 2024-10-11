@@ -165,3 +165,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'  # This is literally the word 'apikey'
+EMAIL_HOST_PASSWORD = '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'  # Replace with your SendGrid API key
+DEFAULT_FROM_EMAIL = 'cdvtoqr@gmail.com'

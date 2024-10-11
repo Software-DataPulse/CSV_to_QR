@@ -36,6 +36,8 @@ urlpatterns = [
     # Download all QR codes as a ZIP file (requires user to be logged in)
     path('download_all_qr_codes/', views.download_all_qr_codes, name='download_all_qr_codes'),
 
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+
     # Password reset views (optional, if you want to include password management)
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='accounts/password_reset.html'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='accounts/password_reset_done.html'), name='password_reset_done'),

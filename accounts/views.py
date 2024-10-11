@@ -1,7 +1,8 @@
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import UserRegistrationForm, CSVUploadForm
+from .forms import CSVUploadForm #UserRegistrationForm,
 from .models import QRCode
 import qrcode
 
@@ -15,7 +16,85 @@ def home(request):
     """
     return render(request, 'accounts/home.html')
 
+
+# views.py
+
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from .tokens import email_verification_token
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and email_verification_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return redirect('home')
+    else:
+        return render(request, 'accounts/activation_invalid.html')
+
+
+# views.py
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import CustomUserCreationForm
+from .tokens import email_verification_token
+
+# views.py
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import CustomUserCreationForm
+from .tokens import email_verification_token
+
+
 def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False  # Deactivate the account until email is verified
+            user.save()
+
+            # Send verification email
+            current_site = get_current_site(request)
+            subject = 'Verify your email address'
+            message = render_to_string('accounts/verify_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': email_verification_token.make_token(user),
+            })
+            send_mail(subject, message, 'csvtoqr@gmail.com', [user.email])
+
+            return render(request, 'accounts/verification_sent.html')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'accounts/registration.html', {'form': form})
+
+
+'''def register(request):
     """
     View to handle user registration.
     """
@@ -33,7 +112,7 @@ def register(request):
     return render(request, 'accounts/registration.html', {'form': form})
 
 from django.contrib.auth.forms import AuthenticationForm
-
+'''
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
