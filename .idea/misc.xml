@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.12 (qr_generator_project)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (CSV_to_QR)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (PyCharmLearningProject)" project-jdk-type="Python SDK" />
 </project>
