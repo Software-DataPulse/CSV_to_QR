@@ -22,12 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-th*q^b@ur@3$h8^bui7bp=&18wd_uj@nt4fu2oez23%_vn(d=c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['your-app-name.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['csv-to-qr.herokuapp.com', 'localhost', '127.0.0.1']
 
 # settings.py
 LOGIN_URL = '/accounts/login/'  # Redirects to the login page when @login_required fails
