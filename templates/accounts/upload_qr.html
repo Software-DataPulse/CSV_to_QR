@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Upload CSV to Generate QR Codes">
+    <title>CSV to QR Code Generator</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F7F9FC;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .upload-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 50px auto;
+            max-width: 800px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .upload-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .upload-header h2 {
+            font-size: 2rem;
+            color: #002d72;
+        }
+        .upload-header p {
+            color: #495057;
+        }
+        .btn-primary {
+            background-color: #002d72;
+            border-color: #002d72;
+        }
+        .btn-primary:hover {
+            background-color: #001b47;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .qr-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .qr-card {
+            margin: 15px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            text-align: center;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 250px;
+        }
+        .qr-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+        }
+        .qr-card h5 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            white-space: nowrap;  /* Prevents the text from wrapping */
+            overflow: hidden;     /* Hides the overflowed text */
+            text-overflow: ellipsis;  /* Adds '...' at the end for truncated text */
+            width: 100%;          /* Ensures the heading stays within the card's width */
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="upload-container">
+        <!-- Header Section -->
+        <div class="upload-header">
+            <h2>Upload CSV to Generate QR Codes</h2>
+            <p>Select a CSV file to generate QR codes and download them individually or as a ZIP file.</p>
+        </div>
+
+        <!-- Upload Form -->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="file" class="form-control" id="csv_file" name="csv_file" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Upload and Generate QR Codes</button>
+        </form>
+
+        {% if qr_codes %}
+        <!-- QR Code Cards Section -->
+        <div class="qr-container">
+            {% for qr in qr_codes %}
+            <div class="qr-card">
+                <h5>{{ qr.name }}</h5>
+                <img src="{{ qr.url }}" alt="QR Code Preview">
+                <a href="{{ qr.url }}" download="{{ qr.name }}" class="btn btn-success mt-3">Download QR</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Download All as ZIP -->
+        <div class="mt-4 text-center">
+            <a href="{% url 'download_qr_zip' %}?zip_file={{ zip_file }}" class="btn btn-primary">Download All as ZIP</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

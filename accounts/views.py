@@ -9,13 +9,58 @@ import qrcode
 
 from django.shortcuts import render
 
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
 def home(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')  # Get the email from the form
+        password = request.POST.get('password')  # Get the password from the form
+        user = authenticate(request, username=email, password=password)  # Authenticate user
+        if user is not None:
+            login(request, user)  # Log the user in
+            return redirect('profile')  # Redirect to profile page after successful login
+        else:
+            messages.error(request, 'Invalid email or password')  # Show an error message
+    return render(request, 'accounts/home.html')  # Render the home page with the login form
+
+
+'''def home(request):
     """
     Home view function to render the home page.
     """
     return render(request, 'accounts/home.html')
+'''
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.contrib import messages
+
 
 def register(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+
+        if password1 == password2:
+            if not User.objects.filter(username=email).exists():
+                user = User.objects.create_user(username=email, email=email, password=password1, first_name=full_name)
+                user.save()
+                login(request, user)
+                return redirect('profile')  # Redirect to profile after successful registration
+            else:
+                messages.error(request, 'Email already exists')
+        else:
+            messages.error(request, 'Passwords do not match')
+    return render(request, 'accounts/register.html')  # Render registration page
+
+
+'''def register(request):
     """
     View to handle user registration.
     """
@@ -31,7 +76,7 @@ def register(request):
     else:
         form = UserRegistrationForm()
     return render(request, 'accounts/registration.html', {'form': form})
-
+'''
 from django.contrib.auth.forms import AuthenticationForm
 
 def user_login(request):
@@ -48,24 +93,27 @@ def user_login(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/home.html', {'form': form})
 
 from django.contrib import messages
 from django.shortcuts import redirect
 
 # accounts/views.py
-
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def profile(request):
+    return render(request, 'accounts/profile.html')  # Render the profile page for logged-in users
+
+'''def profile(request):
     """
     View to display the user's profile information.
     """
     return render(request, 'accounts/profile.html', {'user': request.user})
+    '''
 
-
+@login_required
 def user_logout(request):
     logout(request)
     messages.success(request, "You have successfully logged out.")
@@ -93,8 +141,138 @@ from django.shortcuts import render, redirect
 from .models import QRCode
 from django.conf.urls.static import static
 
+import qrcode
+from django.core.files.storage import default_storage
+from django.http import HttpResponse, FileResponse
+from zipfile import ZipFile
+import os
+
+
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'accounts/change_password.html'
+    success_url = reverse_lazy('profile')  # Redirect to profile after successful password change
+
+
+import qrcode
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+import os
+from zipfile import ZipFile
+from django.http import FileResponse
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+import csv
+import qrcode
+import os
+import re
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+from zipfile import ZipFile
+from django.http import FileResponse
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+import csv
+import qrcode
+import os
+import re
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+from zipfile import ZipFile
+from django.http import FileResponse
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+import csv
+import qrcode
+import os
+import re
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+#from models import QRCodeData
+from django.urls import reverse
+
+
+import csv
+import qrcode
+import os
+import re
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+from zipfile import ZipFile
+from django.http import FileResponse
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 @login_required
+def upload_qr(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
+        file_path = default_storage.save(f'temp/{csv_file.name}', ContentFile(csv_file.read()))
+        absolute_path = os.path.join(settings.MEDIA_ROOT, file_path)
+
+        qr_codes = []
+        try:
+            # Open the uploaded CSV file
+            with open(absolute_path, 'r') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    if len(row) >= 2:  # Ensure there are at least two columns
+                        col1 = row[0].strip()
+                        col2 = row[1].strip()
+
+                        # Create a safe filename using the first two columns
+                        filename_base = f"{col1}_{col2}"
+                        safe_filename = re.sub(r'[^a-zA-Z0-9]', '_', filename_base)  # Replace non-alphanumeric characters
+                        truncated_filename = safe_filename[:50]  # Limit the filename length to 50 characters
+
+                        # Generate the QR code and save it
+                        qr_data = ','.join(row)  # You can customize this if you want to use specific columns for the QR content
+                        qr = qrcode.make(qr_data)
+                        qr_path = f'temp/{truncated_filename}.png'
+                        qr_save_path = os.path.join(settings.MEDIA_ROOT, qr_path)
+                        qr.save(qr_save_path)
+
+                        # Append the QR code details for the template
+                        qr_codes.append({
+                            'name': truncated_filename,  # Display name of the QR code
+                            'url': f'/media/temp/{truncated_filename}.png'  # URL for the QR code image
+                        })
+
+            # Prepare ZIP for download
+            zip_filename = 'qr_codes.zip'
+            zip_path = os.path.join(settings.MEDIA_ROOT, f'temp/{zip_filename}')
+            with ZipFile(zip_path, 'w') as zip_file:
+                for qr_code in qr_codes:
+                    zip_file.write(os.path.join(settings.MEDIA_ROOT, f'temp/{qr_code["name"]}.png'))
+
+            # Render the page with generated QR codes
+            return render(request, 'accounts/upload_qr.html', {'qr_codes': qr_codes, 'zip_file': zip_filename})
+
+        finally:
+            os.remove(absolute_path)
+
+    return render(request, 'accounts/upload_qr.html')
+
+def download_qr_zip(request):
+    zip_filename = request.GET.get('zip_file')
+    zip_path = os.path.join(settings.MEDIA_ROOT, f'temp/{zip_filename}')
+    return FileResponse(open(zip_path, 'rb'), as_attachment=True, filename=zip_filename)
+
+
+
+''''@login_required
 def upload_csv(request):
     if request.method == 'POST':
         form = CSVUploadForm(request.POST, request.FILES)
@@ -146,7 +324,7 @@ def upload_csv(request):
         form = CSVUploadForm()
 
     return render(request, 'accounts/upload_csv.html', {'form': form})
-
+'''
 '''
 @login_required
 def upload_csv(request):
@@ -202,7 +380,7 @@ import zipfile
 # views.py
 from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def view_qr_codes(request):
     """
     View to display all the generated QR codes for the logged-in user.
@@ -274,16 +452,11 @@ from .models import QRCode
 
 from django.shortcuts import render, get_object_or_404
 from .models import QRCode
-
+'''
+from django.shortcuts import render, get_object_or_404
+from .models import QRCodeData
 
 def display_qr_data(request, qr_code_id):
-    # Fetch the QRCode object by ID
-    qr_code = get_object_or_404(QRCode, id=qr_code_id)
-
-    # Retrieve the data that was encoded in the QR code
-    data = qr_code.data
-
-    # Render the template with the data
-    return render(request, 'accounts/display_qr_data.html', {'data': data})
-
-
+    qr_data = get_object_or_404(QRCodeData, id=qr_code_id)
+    return render(request, 'accounts/display_qr_data.html', {'data': qr_data.data})
+'''
