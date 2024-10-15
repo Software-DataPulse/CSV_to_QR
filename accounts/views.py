@@ -181,10 +181,10 @@ def register(request):
             user.save()
             login(request, user)
             messages.success(request, "Registration successful.")
-            return redirect('home')
+            return redirect('profile')
     else:
         form = UserRegistrationForm()
-    return render(request, 'accounts/registration.html', {'form': form})
+    return render(request, 'accounts/registrer.html', {'form': form})
 
 # User login view
 def user_login(request):
@@ -197,10 +197,10 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f"Welcome back, {username}!")
-                return redirect('home')
+                return redirect('profile')
     else:
         form = AuthenticationForm()
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/home.html', {'form': form})
 
 # User logout view
 @login_required
