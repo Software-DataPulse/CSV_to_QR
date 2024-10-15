@@ -1,141 +1,92 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - QR Code Generator</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="description" content="User Profile - CSV to QR Code Generator">
+    <title>User Profile - CSV to QR Code Generator</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+            background: linear-gradient(135deg, #4b79a1, #283e51); /* Gradient background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
         }
-        .container {
-            max-width: 900px;
-            margin: 50px auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        .profile-container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            border-radius: 15px;
+            padding: 50px;
+            margin: 80px auto;
+            max-width: 800px;
+            color: #000; /* For better contrast on white */
         }
-        .profile-header {
-            text-align: center;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 20px;
-        }
-        .profile-header h1 {
-            margin-bottom: 10px;
-            font-weight: 700;
-            color: #007bff;
+        .profile-header h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #002d72;
         }
         .profile-header p {
-            color: #666;
-            font-size: 1.1em;
+            color: #495057;
         }
         .profile-info {
             margin-top: 30px;
         }
-        .profile-info .info-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #ddd;
+        .profile-info h4 {
+            font-size: 1.8rem;
+            color: #4b79a1;
         }
-        .info-item label {
-            font-weight: 600;
-            color: #333;
+        .profile-info p {
+            font-size: 1.2rem;
         }
-        .info-item span {
-            color: #555;
-        }
-        .actions {
+        .profile-buttons {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
         }
-        .actions a {
+        .profile-buttons .btn {
             margin: 10px;
-            display: inline-block;
-            background: #007bff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            background-color: #283e51;
             color: #fff;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-        .actions a:hover {
-            background: #0056b3;
-        }
-        .navigation {
-            background: #007bff;
-            color: #fff;
-            padding: 10px;
-        }
-        .navigation a {
-            color: #fff;
-            margin-right: 20px;
-            text-decoration: none;
-        }
-        .navigation a:hover {
-            text-decoration: underline;
-        }
-        .profile-avatar {
-            margin: 0 auto;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            background: #007bff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            color: #fff;
+        .profile-buttons .btn:hover {
+            background-color: #4b79a1;
+            transition: background-color 0.3s;
         }
     </style>
 </head>
 <body>
-    <div class="navigation">
-        <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
-        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </div>
 
-    <div class="container">
-        <div class="profile-header">
-            <div class="profile-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <h1>{{ user.username }}</h1>
-            <p>Welcome to your profile, {{ user.first_name }} {{ user.last_name }}</p>
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header text-center">
+            <h2>Welcome, {{ user.username }}</h2>
+            <p>Member since {{ user.date_joined|date:"F Y" }}</p>
         </div>
 
+        <!-- Profile Info -->
         <div class="profile-info">
-            <div class="info-item">
-                <label>Full Name:</label>
-                <span>{{ user.first_name }} {{ user.last_name }}</span>
-            </div>
-            <div class="info-item">
-                <label>Email Address:</label>
-                <span>{{ user.email }}</span>
-            </div>
-            <div class="info-item">
-                <label>Date Joined:</label>
-                <span>{{ user.date_joined|date:"F j, Y" }}</span>
-            </div>
-            <div class="info-item">
-                <label>Last Login:</label>
-                <span>{{ user.last_login|date:"F j, Y, g:i a" }}</span>
-            </div>
+            <h4>Personal Information</h4>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Joined:</strong> {{ user.date_joined|date:"d M Y" }}</p>
         </div>
 
-        <div class="actions">
-            <a href="{% url 'upload_csv' %}"><i class="fas fa-upload"></i> Upload CSV for QR Codes</a>
-            <a href="{% url 'view_qr_codes' %}"><i class="fas fa-qrcode"></i> View My QR Codes</a>
-            <a href="{% url 'password_reset' %}"><i class="fas fa-key"></i> Reset Password</a>
+        <!-- Profile Buttons -->
+        <div class="profile-buttons">
+            <a href="{% url 'upload_qr_page' %}" class="btn">Upload CSV to Generate QR</a>
+            <a href="{% url 'change_password' %}" class="btn">Change Password</a>
+            <a href="{% url 'logout' %}" class="btn">Log Out</a>
         </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
