@@ -12,66 +12,142 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #f7f9fc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .navbar {
-            background-color: #002d72;
-        }
-        .navbar-brand {
-            color: white;
-            font-weight: bold;
-        }
-        .navbar-brand:hover {
-            color: #e0e0e0;
-        }
-        .hero-section {
-            padding: 60px 0;
-        }
-        .hero-text {
-            margin-bottom: 40px;
-        }
-        .hero-text h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #002d72;
-        }
-        .hero-text p {
-            font-size: 1.2rem;
-            color: #495057;
-        }
-        .form-container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-        .form-control {
-            height: 45px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-        .btn-primary {
-            background-color: #002d72;
-            border: none;
-            border-radius: 10px;
-            height: 45px;
-            width: 100%;
-        }
-        .btn-primary:hover {
-            background-color: #001b47;
-        }
-        .footer {
-            background-color: #002d72;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-        .footer p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
+        /* Full height of the page */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background-color: #f7f9fc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure full page height */
+}
+
+.main-content-wrapper {
+    flex: 1; /* Ensure the main content takes up available space */
+}
+
+/* Navbar */
+.navbar {
+    background-color: #002d72;
+}
+
+.navbar-brand {
+    color: white;
+    font-weight: bold;
+}
+
+.navbar-brand:hover {
+    color: #e0e0e0;
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 60px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Center text and content */
+    width: 100%;
+}
+
+.hero-text {
+    margin-bottom: 20px;
+}
+
+.hero-text h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #002d72;
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+/* Form Container Styling */
+.form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 90%; /* Adjust form width for smaller screens */
+    max-width: 400px; /* Keep max width for larger screens */
+    margin: 0 auto; /* Center form container */
+}
+
+.form-control {
+    height: 45px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.btn-primary {
+    background-color: #002d72;
+    border: none;
+    border-radius: 10px;
+    height: 45px;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #001b47;
+}
+
+/* Footer */
+.footer {
+    background-color: #002d72;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+    .hero-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+
+    .form-container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-text h1 {
+        font-size: 1.6rem; /* Smaller font size for very small screens */
+    }
+
+    .hero-text p {
+        font-size: 0.95rem; /* Adjusted for small screen readability */
+    }
+
+    .form-container {
+        padding: 10px;
+        width: 95%; /* Maximize form width on smaller screens */
+    }
+
+    .footer p {
+        font-size: 0.8rem; /* Adjust footer font size for smaller screens */
+    }
+}
+
     </style>
 </head>
 <body>
